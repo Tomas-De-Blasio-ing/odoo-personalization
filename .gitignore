@@ -1,0 +1,19 @@
+# Ignorar logs y archivos temporales
+*.log
+*.pid
+.Trash/
+
+# Ignorar el filestore y volcados de base de datos
+.local/
+data/
+filestore/
+*.dump
+*.zip
+
+# Archivos de Python compilados y entornos virtuales
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.env

@@ -1,0 +1,60 @@
+<odoo>
+    <record id="action_report_ministerio_titulo" model="ir.actions.report">
+        <field name="name">Certificado de Título</field>
+        <field name="model">ministerio.titulo</field>
+
+        <!-- El usuario va a descargar un archivo pdf, se permite agregar html para que se abra 
+         una pestaña nueva en el navegador-->
+        <field name="report_type">qweb-pdf</field>
+
+        <!-- Al hacer clic, busca el diseño html con id: 'report_titulo_template'-->
+        <field name="report_name">mi_primer_modulo.report_titulo_template</field>
+        <field name="report_file">mi_primer_modulo.report_titulo_template</field>
+
+        <!-- Se toma el botón y lo ata a todas las vistas del modelo -->
+        <field name="binding_model_id" ref="model_ministerio_titulo"/>
+        <!-- Se agrega a la sección imprimir/reportes-->
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_titulo_template">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <t t-foreach="docs" t-as="doc">
+                        
+                        <div class="text-center mt-5">
+                            <img t-att-src="'/mi_primer_modulo/static/img/logo.png'" style="max-height: 100px; margin-bottom: 20px;"/>
+                            <h2>CERTIFICADO OFICIAL DEL MINISTERIO</h2>
+                        </div>
+                        
+                        <div class="mt-4" style="font-size: 18px;">
+                            <p>
+                                Por la presente, el Ministerio certifica que el docente 
+                                <b><t t-esc="doc.employee_id.name"/></b>
+                            </p>
+                            <p>
+                                Posee el título de nivel 
+                                <span style="text-transform: uppercase;">
+                                    <b><t t-esc="doc.nivel"/></b>
+                                </span>
+                            </p>
+                            <p>
+                                Denominación registrada: 
+                                <i><t t-esc="doc.name"/></i>
+                            </p>
+                        </div>
+                        
+                        <t t-if="doc.nivel == 'universitario'">
+                            <div class="mt-5 p-3" style="border: 2px solid green; color: green; text-align: center;">
+                                <strong>VÁLIDO PARA BONIFICACIÓN DE GRADO SUPERIOR</strong>
+                            </div>
+                        </t>
+
+                        <p style="page-break-after: always;"/>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

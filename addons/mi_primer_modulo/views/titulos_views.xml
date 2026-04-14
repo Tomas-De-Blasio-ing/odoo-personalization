@@ -1,0 +1,98 @@
+<odoo>
+
+    <!-- Vista de barra de búsqueda, se elige que filtros y agrupaciones mostrar
+        al abrir la barra de búsqueda -->
+    <record id="view_titulo_search" model="ir.ui.view">
+            <field name="name">ministerio.titulo.search</field>
+            <field name="model">ministerio.titulo</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name" string="Nombre o Docente" filter_domain="['|', ('name', 'ilike', self), ('employee_id', 'ilike', self)]"/>
+
+                    <filter string="Solo Universitarios" name="filtro_universitario" domain="[('nivel', '=', 'universitario')]"/>
+                    <filter string="Títulos Aprobados" name="filtro_aprobado" domain="[('state', '=', 'approved')]"/>
+                    
+                    <separator/>
+                    
+                    <filter string="Mis Títulos (Borrador)" name="filtro_mis_borradores" domain="[('state', '=', 'draft')]"/>
+
+                    <group expand="0" string="Agrupar por">
+                        <filter string="Nivel Educativo" name="group_by_nivel" context="{'group_by': 'nivel'}"/>
+                        <filter string="Docente" name="group_by_docente" context="{'group_by': 'employee_id'}"/>
+                        <filter string="Estado" name="group_by_estado" context="{'group_by': 'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        
+    <record id="view_titulo_form" model="ir.ui.view">
+        <field name="name">ministerio.titulo.form</field>
+        <field name="model">ministerio.titulo</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <!-- type: Cuando se haga clic, va al archivo Python de este objeto y ejecuta la función que se llama igual que el name --> 
+                    <!-- class: Diseño CSS para el color del botón-->
+                    <!-- invisible: EL botón se oculta si el título está aprobado-->
+                    <button name="action_aprobar" 
+                            string="Aprobar Título"
+                            type="object"                      
+                            class="oe_highlight" 
+                            invisible="state != 'draft'"/>
+                    <!-- type: Cuando se haga clic, va al archivo Python de este objeto y ejecuta la función que se llama igual que el name --> 
+                    <!-- class: Diseño CSS para el color del botón-->
+                    <!-- invisible: EL botón se oculta si el título está aprobado-->
+                    <button name="action_borrador" 
+                            string="Pasar a Borrador"
+                            type="object"                      
+                            class="oe_highlight" 
+                            invisible="state != 'approved'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,approved"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="nivel"/>
+                        </group>
+                        <group>
+                            <field name="employee_id"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div> <!-- Se tiene que heredar en el modelo el módulo mail (mensajería)-->
+            </form>
+        </field>
+    </record>
+
+
+    <record id="view_titulo_tree" model="ir.ui.view">
+        <field name="name">ministerio.titulo.tree</field>
+        <field name="model">ministerio.titulo</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="nivel"/>
+                <field name="employee_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_ministerio_titulo" model="ir.actions.act_window">
+        <field name="name">Títulos</field>
+        <field name="res_model">ministerio.titulo</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_ministerio_titulo"
+              name="Títulos Ministerio"
+              parent="hr.menu_hr_root"
+              action="action_ministerio_titulo"
+              sequence="10"/>
+</odoo>
+ 
