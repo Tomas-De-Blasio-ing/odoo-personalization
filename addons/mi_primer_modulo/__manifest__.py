@@ -11,6 +11,7 @@
         'security/ir.model.access.csv',
         'security/titulo_security_rules.xml',
         'views/hr_employee_views.xml',
+        'views/wizard_aprobacion_views.xml',
         'views/titulos_views.xml',
         'reports/titulo_reports.xml'
     ],

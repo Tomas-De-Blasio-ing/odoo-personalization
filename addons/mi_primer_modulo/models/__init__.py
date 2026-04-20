@@ -1,1 +1,1 @@
-from . import test_modelo, titulo
+from . import test_modelo, titulo, wizard_aprobacion

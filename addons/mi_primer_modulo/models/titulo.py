@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 
 class MinisterioTitulo(models.Model):
     _name = 'ministerio.titulo'
@@ -32,7 +33,7 @@ class MinisterioTitulo(models.Model):
     # store = True, si no se agrega, se calcula el puntaje en el aire y no se guarda en la bd
     puntaje_boni= fields.Integer(string = 'Puntaje de bonificación', compute = '_compute_puntaje', store=True)
 
-    es_grado_superior = fields.Boolean(string='Es Grado Superior')
+    es_grado_superior = fields.Boolean(string='Es Grado Superior?')
 
 
     # --------------------------------------------------------------------------    
@@ -62,9 +63,54 @@ class MinisterioTitulo(models.Model):
         for record in self:
             if record.nivel == 'secundario':
                 record.puntaje_boni = 10
+                record.es_grado_superior = False
             elif record.nivel == 'terciario':
                 record.puntaje_boni = 20
+                record.es_grado_superior = False
             elif record.nivel == 'universitario':
                 record.puntaje_boni = 40
+                record.es_grado_superior = True
             else:
                 record.puntaje_boni = 0
+                record.es_grado_superior = False
+
+    # --------------------------------------------------------------------------    
+    # Inteligencia de la interfaz @api.onchange
+    # ---------------------------------------------------------------------    
+    @api.onchange('nivel')
+    def _onchange_aviso_analitico(self):
+        """
+        Lanza una advertencia visual si el usuario selecciona 'terciario'.
+        """
+        # Como es un onchange de un campo simple antes de guardar, 
+        # a veces no necesitamos el "for record in self:", podemos usar self directo.
+        for record in self:
+            if self.nivel == 'terciario':
+                return {
+                    'warning': {
+                        'title': "Aviso Importante",
+                        'message': "Ha seleccionado nivel Terciario. Recuerde que es obligatorio adjuntar una copia escaneada del analítico en la pestaña de mensajes antes de solicitar la aprobación.",
+                    }
+                }
+
+    # --------------------------------------------------------------------------    
+    # Validación de integridad @api.constrains
+    # ---------------------------------------------------------------------    
+    @api.constrains('name','employee_id')
+    def _chech_titulo_duplicado(self):
+            '''
+            Evita que un mismo docente se cargue dos veces exactamente con
+            el mismo título
+            ''' 
+            for record in self:
+                # Buscamos si existe otro registro con el mismo nombre y mismo docente
+                # que NO sea este mismo registro (id != record.id)
+
+                duplicados = self.search([
+                    ('name', '=like',record.name), #=like ignora mayusculas/minúsculas
+                    ('employee_id','=',record.employee_id.id),
+                    ('id','!=',record.id)
+                ])
+                if duplicados:
+                    raise ValidationError("Error: El docente ya tiene regitrado este título")
+

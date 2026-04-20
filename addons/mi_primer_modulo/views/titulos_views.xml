@@ -79,9 +79,22 @@
         <field name="model">ministerio.titulo</field>
         <field name="arch" type="xml">
             <tree>
+                <!-- header dentro de tree, el botón solo se hará visible si 
+                    cuando se marque al menos una casilla de verificación -->
+                <header>
+                <!-- type="action" va a la tabla de acciones de ventana (ir.actions.act_window)
+                    y se ejecuta la que se indica.
+                    %() se busca el ID externo de un registro, la d del final es para que se pase a decimal -->
+                <button name="%(action_wizard_aprobacion_masiva)d" 
+                            string="Aprobación masiva"
+                            type="action"                      
+                            class="btn-primary"/>
+                </header>
+
                 <field name="name"/>
                 <field name="nivel"/>
                 <field name="employee_id"/>
+                <field name="es_grado_superior"/>
                 <field name="state"/>
                 <field name="puntaje_boni"/>
             </tree>

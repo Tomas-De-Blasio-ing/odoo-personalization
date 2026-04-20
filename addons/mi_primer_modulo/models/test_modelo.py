@@ -3,9 +3,16 @@ from odoo import models, fields, api
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
-    legajo_ministerio = fields.Char(string="Legajo Ministerio", required=True, default = '0000')
 
-   
+    # --------------------------------------------------------------------------    
+    # Campos de un título
+    # --------------------------------------------------------------------------  
+
+    legajo_ministerio = fields.Char(string="Legajo Ministerio", required=True, default = '0000')
+    cantidad_titulos = fields.Integer(string="Cantidad de Títulos", compute="_compute_cantidad_titulos")
+
+
+
     # OCULTAR FILTROS DE BÚSQUEDA
     # @api.model significa que esta funcion afecta a TODA la tabla
     @api.model
@@ -30,3 +37,20 @@ class HrEmployee(models.Model):
     
         # Devolvemos la lista modeificada a la interefaz visual
         return res
+
+
+
+    # --------------------------------------------------------------------------    
+    # Contar cantidad de títulos con método search
+    # ---------------------------------------------------------------------    
+    def _compute_cantidad_titulos(self):
+        for record in self:
+            # 2. Viajamos a la tabla de títulos usando self.env
+            # 3. Usamos .search() pasándole un "Dominio" (Condición de búsqueda)
+            titulos_encontrados = self.env['ministerio.titulo'].search([
+                ('empleado_id', '=', record.id), # Que el título sea de este empleado
+                ('nivel', '=', 'universitario')  # Que sea universitario
+            ])
+            
+            # 4. Contamos cuántos encontró (len es una función de Python para contar)
+            record.cantidad_titulos = len(titulos_encontrados)

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_wizard_aprobacion_tree" model="ir.ui.view">
+        <field name="name">wizard.aprobacion.titulo.form</field>
+        <field name="model">wizard.aprobacion.titulo</field>
+        <field name="arch" type="xml">
+            <form string="Aprobación masiva">
+                <group>
+                    <field name="comentario" placeholder="(Opcional) Escribe un comentario..."></field>
+                </group>
+                <!-- footer es exclusiva para los Wizards. Fija botones en la parte inferior-->
+                <footer>
+                    <!-- type="Object" hace que cuando se haga clic se ejecuta la función name=""-->
+                    <button name="action_aprobacion_masiva" string="Aprobar Títulos" type="object" class="btn-primary"/>
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    
+
+     <record id="action_wizard_aprobacion_masiva" model="ir.actions.act_window">
+        <field name="name">Aprobación masiva</field>
+        <field name="res_model">wizard.aprobacion.titulo</field>
+        <field name="view_mode">form</field>
+        <!-- target="Current" abre una ventana sobre la actual
+             target="new" abre una ventana emergente -->
+        <field name="target">new</field>
+                     
+    </record>
+
+</odoo>
