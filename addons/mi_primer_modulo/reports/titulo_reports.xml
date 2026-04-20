@@ -13,9 +13,11 @@
 
         <!-- Se toma el botón y lo ata a todas las vistas del modelo -->
         <field name="binding_model_id" ref="model_ministerio_titulo"/>
+        
         <!-- Se agrega a la sección imprimir/reportes-->
         <field name="binding_type">report</field>
     </record>
+
 
     <template id="report_titulo_template">
         <t t-call="web.html_container">
@@ -31,17 +33,17 @@
                         <div class="mt-4" style="font-size: 18px;">
                             <p>
                                 Por la presente, el Ministerio certifica que el docente 
-                                <b><t t-esc="doc.employee_id.name"/></b>
+                                <b><t t-esc="doc.employee_id.sudo().name"/></b>
                             </p>
                             <p>
                                 Posee el título de nivel 
                                 <span style="text-transform: uppercase;">
-                                    <b><t t-esc="doc.nivel"/></b>
+                                    <b><t t-esc="doc.sudo().nivel"/></b>
                                 </span>
                             </p>
                             <p>
                                 Denominación registrada: 
-                                <i><t t-esc="doc.name"/></i>
+                                <i><t t-esc="doc.sudo().name"/></i>
                             </p>
                         </div>
                         

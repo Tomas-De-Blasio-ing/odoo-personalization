@@ -56,7 +56,11 @@
                             <field name="nivel"/>
                         </group>
                         <group>
-                            <field name="employee_id"/>
+                            <field name="employee_id" readonly='1' groups = '!hr.group_hr_manager'/>
+
+
+                            <field name="employee_id" groups = 'hr.group_hr_manager'/>
+
                         </group>
                     </group>
                 </sheet>
@@ -79,6 +83,7 @@
                 <field name="nivel"/>
                 <field name="employee_id"/>
                 <field name="state"/>
+                <field name="puntaje_boni"/>
             </tree>
         </field>
     </record>

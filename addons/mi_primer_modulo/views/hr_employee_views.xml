@@ -27,7 +27,7 @@
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='mobile_phone']" position="after">
-                <field name="x_legajo_min"/>
+                <field name="legajo_ministerio"/>
             </xpath>
         </field>
     </record>

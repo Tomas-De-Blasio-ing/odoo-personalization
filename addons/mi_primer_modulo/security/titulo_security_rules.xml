@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data noupdate="0"> <!-- Evitar que se sobreescriba 
+    <data noupdate="1"> <!-- Evitar que se sobreescriba 
                             el código en cada actualización-->
         
         <record id="rule_titulo_empleado" model="ir.rule"> 

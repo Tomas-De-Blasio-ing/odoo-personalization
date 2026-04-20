@@ -3,7 +3,7 @@ from odoo import models, fields, api
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
-    x_legajo_min = fields.Char(string="Legajo Ministerio", required=True, default = '0000')
+    legajo_ministerio = fields.Char(string="Legajo Ministerio", required=True, default = '0000')
 
    
     # OCULTAR FILTROS DE BÚSQUEDA
