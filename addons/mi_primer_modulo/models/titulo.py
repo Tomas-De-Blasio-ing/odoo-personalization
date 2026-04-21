@@ -96,12 +96,12 @@ class MinisterioTitulo(models.Model):
     # --------------------------------------------------------------------------    
     # Validación de integridad @api.constrains
     # ---------------------------------------------------------------------    
-    @api.constrains('name','employee_id')
+    '''  @api.constrains('name','employee_id')
     def _chech_titulo_duplicado(self):
             '''
-            Evita que un mismo docente se cargue dos veces exactamente con
-            el mismo título
-            ''' 
+       #     Evita que un mismo docente se cargue dos veces exactamente con
+        #    el mismo título
+    ''' 
             for record in self:
                 # Buscamos si existe otro registro con el mismo nombre y mismo docente
                 # que NO sea este mismo registro (id != record.id)
@@ -114,3 +114,17 @@ class MinisterioTitulo(models.Model):
                 if duplicados:
                     raise ValidationError("Error: El docente ya tiene regitrado este título")
 
+'''
+
+    @api.constrains('nombre_titulo', 'employee_id')
+    def _check_titulo_duplicado(self):
+        for record in self:
+            self.env.cr.execute("""
+                SELECT id FROM MinisterioTitulo
+                WHERE name = %s
+                AND employee_id = %s
+                AND id != %s
+                LIMIT 1
+                """, (record.name, record.employee_id.id, record.id))
+        if self.env.cr.fetchone():
+            raise ValidationError("Este docente ya tiene un título con ese nombre.")

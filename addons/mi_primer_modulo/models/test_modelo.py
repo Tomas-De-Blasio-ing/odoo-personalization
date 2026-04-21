@@ -54,3 +54,29 @@ class HrEmployee(models.Model):
             
             # 4. Contamos cuántos encontró (len es una función de Python para contar)
             record.cantidad_titulos = len(titulos_encontrados)
+
+
+    # --------------------------------------------------------------------------    
+    # Calcular monto por puntaje de bonificaciones
+    # ---------------------------------------------------------------------     
+    def obtener_bono_por_titulos(self):
+        """
+        Calcula el dinero total por títulos aprobados.
+        Diseñado para ser llamado desde las Reglas Salariales.
+        """
+        # ensure_one() actúa como un escudo. Si alguien intenta pasarle 50 empleados
+        # a esta función por error, lanza una alerta antes de romper la base de datos.
+        # Garantiza que 'self' es un (1) solo empleado.
+        self.ensure_one() 
+
+        titulos = self.env['ministerio.titulo'].search([
+            ('empleado_id','=', self.id),
+            ('state','=','approved')
+        ])
+
+        # 2. OPTIMIZACIÓN ORM: Usamos mapped para extraer solo la columna del puntaje
+        # Lista de puntajes: ej. [40, 20, 10]
+        lista_puntajes = titulos.mapped('puntaje_boni')
+        
+        # 3. Retornamos la suma total multiplicada por 100
+        return sum(lista_puntajes)*100

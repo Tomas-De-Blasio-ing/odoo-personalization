@@ -17,3 +17,5 @@ __pycache__/
 venv/
 env/
 .envgit config --global --unset https.proxy
+.env
+odoo-source/
