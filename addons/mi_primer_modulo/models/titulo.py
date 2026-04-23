@@ -16,7 +16,7 @@ class MinisterioTitulo(models.Model):
         ('secundario', 'Secundario'),
         ('terciario','Terciario'),
         ('universitario', 'Universitario')
-    ], string='Nivel', default='terciario')
+    ], string='Nivel', default='secundario')
     
     #Se crea la columna fisica en la base de datos
     employee_id = fields.Many2one(
@@ -37,8 +37,21 @@ class MinisterioTitulo(models.Model):
 
 
     # --------------------------------------------------------------------------    
+    # Atribiutos del módulo
+    # --------------------------------------------------------------------------
+    
+    # Evitar mismo nombre de tarea para un mismo empleado.
+    _sql_constraints = [
+            ('unique_titulo_empleado', # Nombre técnico en la bd  
+             'UNIQUE(name,employee_id)', # Código/consulta SQL 
+            'Este título ya existe para este empleado.')  # Mensaje al usuario
+            ]
+    
+
+    # --------------------------------------------------------------------------    
     # Funciónes de botones para el formulario
     # --------------------------------------------------------------------------    
+    
     # Se crea la función que ejecutará el botón de estado de un título: "Aprobar Título"
     def action_aprobar(self):
         # Se itera sobre todos los titulos, por si se aprueban
@@ -93,38 +106,3 @@ class MinisterioTitulo(models.Model):
                     }
                 }
 
-    # --------------------------------------------------------------------------    
-    # Validación de integridad @api.constrains
-    # ---------------------------------------------------------------------    
-    '''  @api.constrains('name','employee_id')
-    def _chech_titulo_duplicado(self):
-            '''
-       #     Evita que un mismo docente se cargue dos veces exactamente con
-        #    el mismo título
-    ''' 
-            for record in self:
-                # Buscamos si existe otro registro con el mismo nombre y mismo docente
-                # que NO sea este mismo registro (id != record.id)
-
-                duplicados = self.search([
-                    ('name', '=like',record.name), #=like ignora mayusculas/minúsculas
-                    ('employee_id','=',record.employee_id.id),
-                    ('id','!=',record.id)
-                ])
-                if duplicados:
-                    raise ValidationError("Error: El docente ya tiene regitrado este título")
-
-'''
-
-    @api.constrains('nombre_titulo', 'employee_id')
-    def _check_titulo_duplicado(self):
-        for record in self:
-            self.env.cr.execute("""
-                SELECT id FROM MinisterioTitulo
-                WHERE name = %s
-                AND employee_id = %s
-                AND id != %s
-                LIMIT 1
-                """, (record.name, record.employee_id.id, record.id))
-        if self.env.cr.fetchone():
-            raise ValidationError("Este docente ya tiene un título con ese nombre.")

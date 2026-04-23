@@ -10,9 +10,13 @@ class HrEmployee(models.Model):
 
     legajo_ministerio = fields.Char(string="Legajo Ministerio", required=True, default = '0000')
     cantidad_titulos = fields.Integer(string="Cantidad de Títulos", compute="_compute_cantidad_titulos")
-
-
-
+    
+    titulos_ids = fields.One2many(
+        comodel_name= 'ministerio.titulo', 
+        inverse_name='employee_id',
+        string='Mis titulos')   
+    
+    
     # OCULTAR FILTROS DE BÚSQUEDA
     # @api.model significa que esta funcion afecta a TODA la tabla
     @api.model
@@ -41,19 +45,31 @@ class HrEmployee(models.Model):
 
 
     # --------------------------------------------------------------------------    
-    # Contar cantidad de títulos con método search
+    # Contar cantidad de títulos 
     # ---------------------------------------------------------------------    
+    @api.depends('titulos_ids','titulos_ids.nivel')
     def _compute_cantidad_titulos(self):
+        '''
+        Usamos GROUP BY con _read_group(), envitamos traer datos a la RAM
+        y que Postgres haga el cálculo. (RL se cumplen al empezar con self.env[])
+        '''
+        if not self: # Si self viene vacío, salimos.
+            return
+        
+        # Traemos  todos empleados que están en self con la catidad de títulos 
+        # _read_group(dominio, campos_por_los_que_agrupar, agregación)
+        # ('id_empleado','cantidad_de_titulos')
+        empleado_cant_titulos = self.env['ministerio.titulo']._read_group(
+            [('employee_id', 'in', self.ids),('nivel', '=', 'universitario')],
+             ['employee_id'],
+             ['__count'] 
+            )
+        
+        dic_cant_titulos = {empleado.id: cant_titulos for empleado, cant_titulos in empleado_cant_titulos}
+        
+        # Asignación
         for record in self:
-            # 2. Viajamos a la tabla de títulos usando self.env
-            # 3. Usamos .search() pasándole un "Dominio" (Condición de búsqueda)
-            titulos_encontrados = self.env['ministerio.titulo'].search([
-                ('empleado_id', '=', record.id), # Que el título sea de este empleado
-                ('nivel', '=', 'universitario')  # Que sea universitario
-            ])
-            
-            # 4. Contamos cuántos encontró (len es una función de Python para contar)
-            record.cantidad_titulos = len(titulos_encontrados)
+            record.cantidad_titulos = dic_cant_titulos.get(record.id,0)
 
 
     # --------------------------------------------------------------------------    
@@ -69,8 +85,10 @@ class HrEmployee(models.Model):
         # Garantiza que 'self' es un (1) solo empleado.
         self.ensure_one() 
 
+        # Fijarse si se puede optimizar
+        #------------------------------------
         titulos = self.env['ministerio.titulo'].search([
-            ('empleado_id','=', self.id),
+            ('employee_id','=', self.id),
             ('state','=','approved')
         ])
 
