@@ -9,7 +9,7 @@ class HrEmployee(models.Model):
     # --------------------------------------------------------------------------  
 
     legajo_ministerio = fields.Char(string="Legajo Ministerio", required=True, default = '0000')
-    cantidad_titulos = fields.Integer(string="Cantidad de Títulos", compute="_compute_cantidad_titulos")
+    cantidad_titulos_uni = fields.Integer(string="Cantidad de títulos universitarios", compute="_compute_cantidad_titulos_uni", default= 0, store=True)
     
     titulos_ids = fields.One2many(
         comodel_name= 'ministerio.titulo', 
@@ -48,10 +48,10 @@ class HrEmployee(models.Model):
     # Contar cantidad de títulos 
     # ---------------------------------------------------------------------    
     @api.depends('titulos_ids','titulos_ids.nivel')
-    def _compute_cantidad_titulos(self):
+    def _compute_cantidad_titulos_uni(self):
         '''
         Usamos GROUP BY con _read_group(), envitamos traer datos a la RAM
-        y que Postgres haga el cálculo. (RL se cumplen al empezar con self.env[])
+        y que Postgres haga el cálculo. (RL se evlúan al empezar con self.env[])
         '''
         if not self: # Si self viene vacío, salimos.
             return
@@ -65,11 +65,12 @@ class HrEmployee(models.Model):
              ['__count'] 
             )
         
+        
         dic_cant_titulos = {empleado.id: cant_titulos for empleado, cant_titulos in empleado_cant_titulos}
         
         # Asignación
         for record in self:
-            record.cantidad_titulos = dic_cant_titulos.get(record.id,0)
+            record.cantidad_titulos_uni = dic_cant_titulos.get(record.id,0)
 
 
     # --------------------------------------------------------------------------    
@@ -85,8 +86,8 @@ class HrEmployee(models.Model):
         # Garantiza que 'self' es un (1) solo empleado.
         self.ensure_one() 
 
-        # Fijarse si se puede optimizar
-        #------------------------------------
+
+        
         titulos = self.env['ministerio.titulo'].search([
             ('employee_id','=', self.id),
             ('state','=','approved')

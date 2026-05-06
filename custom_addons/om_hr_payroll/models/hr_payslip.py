@@ -352,7 +352,7 @@ class HrPayslip(models.Model):
             localdict = dict(baselocaldict, employee=employee, contract=contract)
             for rule in sorted_rules:
                 key = rule.code + '-' + str(contract.id)
-                localdict['result'] = None
+                localdict['result'] = None 
                 localdict['result_qty'] = 1.0
                 localdict['result_rate'] = 100
                 #check if the rule can be applied

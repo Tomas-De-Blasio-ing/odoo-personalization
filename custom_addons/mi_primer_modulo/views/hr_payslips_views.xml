@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_payslip_form_ministerio" model="ir.ui.view">
+        <field name="name">hr.payslip.form.ministerio</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="om_hr_payroll.view_hr_payslip_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='worked_days_line_ids']/tree/field[@name='number_of_hours']" position="attributes">
+                <!-- Usamos column_invisible porque es una tabla (tree) -->
+                <attribute name="column_invisible">True</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='input_line_ids']/tree/field[@name='code']" position="attributes">
+                <attribute name="column_invisible">True</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='contract_id']" position="after">
+                <field name="payslip_run_id" string='Lote de nómina'/>
+            </xpath>
+        
+        </field>
+    </record>
+
+    <record id="view_payslip_tree_ministerio" model="ir.ui.view">
+        <field name="name">hr.payslip.tree.ministerio</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="om_hr_payroll.view_hr_payslip_tree"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='number']" position="attributes">
+                <!-- Usamos column_invisible porque es una tabla (tree) -->
+                <attribute name="column_invisible">True</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="column_invisible">True</attribute>
+            </xpath>
+
+            <!-- 1. Eliminamos el campo original que estaba escondido al final -->
+            <xpath expr="//field[@name='payslip_run_id']" position="replace"/>
+            
+            <xpath expr="//field[@name='employee_id']" position="after">
+                <field name="payslip_run_id" string='Lote de nómina'/>
+            </xpath>
+        
+        </field>
+    </record>
+
+</odoo>

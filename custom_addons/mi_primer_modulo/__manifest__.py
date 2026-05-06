@@ -5,7 +5,8 @@
         'base', 
         'hr',          # Empleados
         'hr_contract', # Contratos
-        'mail'
+        'mail',
+        'om_hr_payroll'
     ],
     'data': [
         'security/ir.model.access.csv',
@@ -13,6 +14,7 @@
         'views/hr_employee_views.xml',
         'views/wizard_aprobacion_views.xml',
         'views/titulos_views.xml',
+        'views/hr_payslips_views.xml',
         'reports/titulo_reports.xml'
     ],
     'installable': True,

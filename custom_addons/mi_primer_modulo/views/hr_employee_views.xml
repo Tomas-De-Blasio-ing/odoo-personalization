@@ -28,7 +28,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='mobile_phone']" position="after">
                 <field name="legajo_ministerio"/>
-                <field name="cantidad_titulos"/>
+                <field name="cantidad_titulos_uni"/>
             </xpath>
         </field>
     </record>

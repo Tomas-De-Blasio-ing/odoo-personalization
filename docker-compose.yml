@@ -19,14 +19,15 @@ services:
       - "8069:8069"
       - "8072:8072"
     volumes:
-      - ./addons:/mnt/extra-addons
+      - ./custom_addons:/mnt/custom_addons
+      - ./quilsoft_addons:/mnt/quilsoft_addons
       - ./odoo.conf:/etc/odoo/odoo.conf
       - odoo-web-data:/var/lib/odoo
     environment:
       - HOST=db
       - USER=odoo
       - PASSWORD=${DB_PASSWORD}
-    command: odoo --dev=all --config=/etc/odoo/odoo.conf #-d odoo_dev  
+    command: odoo --dev=all --config=/etc/odoo/odoo.conf 
     restart: unless-stopped
 
 volumes:

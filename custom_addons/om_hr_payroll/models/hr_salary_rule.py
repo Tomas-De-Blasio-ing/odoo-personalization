@@ -181,24 +181,30 @@ class HrSalaryRule(models.Model):
     #TODO should add some checks on the type of result (should be float)
     def _compute_rule(self, localdict):
         """
+        Retorna las siguientes salidas: 
+
         :param localdict: dictionary containing the environement in which to compute the rule
         :return: returns a tuple build as the base/amount computed, the quantity and the rate
         :rtype: (float, float, float)
+
+        :param localdict: diccionario que contiene el entorno en el que se calculará la regla
+        :return: devuelve una tupla formada por la base/cantidad calculada, la cantidad y la tasa
+        :rtype: (float, float, float)
         """
         self.ensure_one()
-        if self.amount_select == 'fix':
+        if self.amount_select == 'fix': # Monto fijo
             try:
                 return self.amount_fix, float(safe_eval(self.quantity, localdict)), 100.0
             except:
                 raise UserError(_('Wrong quantity defined for salary rule %s (%s).') % (self.name, self.code))
-        elif self.amount_select == 'percentage':
+        elif self.amount_select == 'percentage': # Porcentaje
             try:
                 return (float(safe_eval(self.amount_percentage_base, localdict)),
                         float(safe_eval(self.quantity, localdict)),
                         self.amount_percentage)
             except:
                 raise UserError(_('Wrong percentage base or quantity defined for salary rule %s (%s).') % (self.name, self.code))
-        else:
+        else: # Código Python (amount_select == 'code')
             try:
                 safe_eval(self.amount_python_compute, localdict, mode='exec', nocopy=True)
                 return float(localdict['result']), 'result_qty' in localdict and localdict['result_qty'] or 1.0, 'result_rate' in localdict and localdict['result_rate'] or 100.0
