@@ -22,3 +22,5 @@ env/
 odoo-source/
 odoo.conf
 .vscode/
+odoo.dev.conf
+odoo.prod.conf

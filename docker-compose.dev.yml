@@ -1,0 +1,32 @@
+services:
+
+  db:
+    environment:
+      - POSTGRES_DB=odoo_dev
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_USER=odoo
+    volumes: 
+      - odoo-db-data-dev:/var/lib/postgresql/data
+    restart: unless-stopped 
+  
+  
+  odoo:
+    ports:
+        - "8069:8069"
+        - "8072:8072"
+    volumes:
+      - ./custom_addons:/mnt/custom_addons #Custom_addons irán las carpetas que están en desarrollo
+      - ./addons:/mnt/addons # Necesitamos también las ya desarrolladas
+      - ./quilsoft_addons:/mnt/quilsoft_addons
+      - ./odoo.dev.conf:/etc/odoo/odoo.conf
+      - odoo-web-data-dev:/var/lib/odoo
+    environment:
+      - HOST=db
+      - USER=odoo
+      - PASSWORD=${DB_PASSWORD}
+    command: odoo --dev=all --config=/etc/odoo/odoo.conf -i base
+    restart: unless-stopped
+
+volumes:
+  odoo-db-data-dev:
+  odoo-web-data-dev:

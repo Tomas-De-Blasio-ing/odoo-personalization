@@ -1,33 +1,30 @@
-version: '3.8'
-
-services:
+services: # Cada servicio es un contenedor independiente
   db:
-    image: postgres:15
-    environment:
+    image: postgres:15 # Software que contiene el contenedor
+    environment: # La configuración, se define el nombre de la base de datos y la contraseña
       - POSTGRES_DB=odoo_dev
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_USER=odoo
-    volumes:
+    volumes: 
       - odoo-db-data:/var/lib/postgresql/data
     restart: unless-stopped  # mejor que always para desarrollo
+
+
 
   odoo:
     image: odoo:17.0
     depends_on:
       - db
-    ports:
-      - "8069:8069"
-      - "8072:8072"
-    volumes:
+    volumes: 
       - ./custom_addons:/mnt/custom_addons
       - ./quilsoft_addons:/mnt/quilsoft_addons
-      - ./odoo.conf:/etc/odoo/odoo.conf
-      - odoo-web-data:/var/lib/odoo
+      - ./odoo.conf:/etc/odoo/odoo.conf # Se sincroniza una carpeta de la Pc con el contenedor
+      - odoo-web-data:/var/lib/odoo # named volumes
     environment:
       - HOST=db
       - USER=odoo
       - PASSWORD=${DB_PASSWORD}
-    command: odoo --dev=all --config=/etc/odoo/odoo.conf 
+    command: odoo --dev=all --config=/etc/odoo/odoo.conf # Se ejecuta apenas se enciende el contenedor
     restart: unless-stopped
 
 volumes:

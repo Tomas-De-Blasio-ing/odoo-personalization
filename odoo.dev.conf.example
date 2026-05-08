@@ -1,0 +1,7 @@
+[options]
+addons_path = /usr/lib/python3/dist-packages/odoo/addons,/mnt/addons,/mnt/custom_addons,/mnt/quilsoft_addons
+data_dir = /var/lib/odoo
+admin_passwd = 
+db_name = odoo_dev
+db_filter = ^odoo_dev$
+workers = 0
