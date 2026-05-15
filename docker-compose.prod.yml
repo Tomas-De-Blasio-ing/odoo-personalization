@@ -24,7 +24,7 @@ services:
       - HOST=db
       - USER=user
       - PASSWORD=${DB_PASSWORD_USER}
-    command: odoo --config=/etc/odoo/odoo.conf -i base
+    command: odoo --config=/etc/odoo/odoo.conf 
     restart: unless-stopped
 
 volumes:

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_employee_desempenio_inherit_min" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit.min</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+        
+            <xpath expr="//field[@name='employee_properties']" position="before">
+
+                <!-- BLOQUE PARA RRHH / MANAGERS -->
+                <group name="score_manager" string="Puntaje (Administración)" groups="hr.group_hr_manager" col="2">
+                    <group>
+                        <field name="presencias_totales"/>
+                        <field name="habiles_totales"/>
+                        <field name="antiguedad_total"/>
+                    </group>
+                    <group>
+                        <field name="puntaje_desempenio"/>
+                    </group>
+                </group>
+
+
+            </xpath>
+        </field>
+    </record>
+</odoo>
+
+<!-- 
+AL haber grupos o campos que no tiene el atributo de name.
+con //field[@name] encontramos algun campo dentro del grupo que queremos tomar
+y lego agregamos /ancestor::group[1] que le dice a odoo:
+"Sesde este campo, mira hacia arriba en el código y quedate con el primer
+grupo que me contenga"
+-->

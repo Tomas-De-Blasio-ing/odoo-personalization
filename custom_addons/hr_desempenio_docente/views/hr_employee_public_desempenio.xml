@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>    
+    <!-- Hacemos lo mismo pero para el modelo público (hr.employee.public) que es el que se ve en la app Empleados -->
+    <record id="view_employee_public_desempenio_inherit" model="ir.ui.view">
+        <field name="name">hr.employee.public.form.inherit.desempenio</field>
+        <field name="model">hr.employee.public</field>
+        <field name="inherit_id" ref="hr.hr_employee_public_view_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//notebook" position="before">
+                <field name="is_current_user" invisible="1"/>                
+                <group name="score_employee_public" string="Mi Puntaje de Desempeño" invisible="not is_current_user">
+                    <group>
+                        <field name="puntaje_desempenio" readonly="1"/>
+                    </group>
+                    <group>
+                        <!-- Espacio simétrico -->
+                    </group>
+                </group>
+            </xpath>
+            
+        </field>
+    </record>
+</odoo>

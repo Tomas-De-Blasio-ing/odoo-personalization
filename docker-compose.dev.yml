@@ -24,8 +24,7 @@ services:
       - HOST=db
       - USER=odoo
       - PASSWORD=${DB_PASSWORD}
-    command: odoo --dev=all --config=/etc/odoo/odoo.conf -i base
-    restart: unless-stopped
+    command: odoo --dev=all --config=/etc/odoo/odoo.conf 
 
 volumes:
   odoo-db-data-dev:

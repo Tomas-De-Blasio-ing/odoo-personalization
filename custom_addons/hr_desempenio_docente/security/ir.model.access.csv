@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hr_employee_docente,hr.employee.user,model_hr_employee,base.group_user,1,1,0,0
+access_hr_employee_rrhh,hr.employee.rrhh,model_hr_employee,hr.group_hr_user,1,1,1,1
+access_om_hr_payroll_user,om_hr_payroll.payslip.user,om_hr_payroll.model_hr_payslip,base.group_user,1,0,0,0
+access_om_hr_payroll_rrhh,om_hr_payroll.payslip.rrhh,om_hr_payroll.model_hr_payslip,hr.group_hr_user,1,1,1,1

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_payslip_desempenio_inherit_min" model="ir.ui.view">
+        <field name="name">hr.payslip.form.inherit.min</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="om_hr_payroll.view_hr_payslip_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='credit_note']" position="after">                 
+                <field name="dias_trabajados"/>
+                <field name="dias_habiles"/>            
+            </xpath>
+        </field>
+    </record>
+</odoo>

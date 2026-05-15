@@ -9,7 +9,7 @@ class HrEmployee(models.Model):
     # --------------------------------------------------------------------------  
 
     legajo_ministerio = fields.Char(string="Legajo Ministerio", required=True, default = '0000')
-    cantidad_titulos_uni = fields.Integer(string="Cantidad de títulos universitarios", compute="_compute_cantidad_titulos_uni", default= 0, store=True)
+    cantidad_titulos_uni = fields.Integer(string="Cantidad de títulos universitarios", compute="_compute_cantidad_titulos_uni", default= 0, store=True) # Store = True es necesario solo en campos computados
     
     titulos_ids = fields.One2many(
         comodel_name= 'ministerio.titulo', 
